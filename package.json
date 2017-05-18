@@ -23,18 +23,20 @@
     "@types/node": "^7.0.18",
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.1.6",
+    "mocha": "^3.4.1",
+    "mocha-typescript": "^1.1.2",
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
     "ts-node": "^3.0.4",
     "typescript": "^2.3.2"
   },
+  
   "dependencies": {
     "body-parser": "^1.17.1",
-    "chai": "^3.5.0",
-    "chai-http": "^3.0.0",
     "debug": "^2.6.7",
     "express": "^4.15.2",
     "inversify": "^4.1.0",
     "knex": "^0.13.0",
-    "mocha": "^3.4.1",
     "morgan": "^1.8.1",
     "reflect-metadata": "^0.1.10"
   }
