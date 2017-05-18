@@ -1,6 +1,5 @@
-import { User } from '../models';
 import { AbstractRepository } from './abstract-repository';
-import { IUserRepository } from '../contracts';
+import { IUserRepository, User } from '../contracts';
 import { injectable } from "inversify";
 
 

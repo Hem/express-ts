@@ -1,4 +1,4 @@
-import * as mocha from 'mocha';
+import { suite, test, slow, timeout, skip, only } from "mocha-typescript";
 import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
@@ -7,9 +7,11 @@ import app from '../src/App';
 chai.use(chaiHttp);
 const expect = chai.expect;
 
-describe('GET api/v1/heroes', () => {
+@suite
+class HeroesTest {
 
-  it('responds with JSON array', () => {
+  @test
+  test_get_all_heroes() {
     return chai.request(app).get('/api/v1/heroes')
       .then(res => {
         expect(res.status).to.equal(200);
@@ -17,9 +19,11 @@ describe('GET api/v1/heroes', () => {
         expect(res.body).to.be.an('array');
         expect(res.body).to.have.length(5);
       });
-  });
+  }
 
-  it('should include Wolverine', () => {
+
+  @test
+  test_should_return_volverine() {
     return chai.request(app).get('/api/v1/heroes')
       .then(res => {
         let Wolverine = res.body.find(hero => hero.name === 'Wolverine');
@@ -36,6 +40,8 @@ describe('GET api/v1/heroes', () => {
           'powers'
         ]);
       });
-  });
+  }
 
-});
+}
+
+

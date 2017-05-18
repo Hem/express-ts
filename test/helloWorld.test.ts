@@ -8,21 +8,24 @@ chai.use(chaiHttp);
 const expect = chai.expect;
 const assert = chai.assert;
 
+@suite('Hello  World Test')
+class HelloWorldTest {
 
-describe('baseRoute', () => {
-
-  it('should be json', () => {
+  @test
+  test_should_be_json(){
     return chai.request(app).get('/')
       .then(res => {
         expect(res.type).to.eql('application/json');
       });
-  });
+  }
 
-  it('should have a message prop', () => {
+  @test
+  test_should_have_a_message(){
     return chai.request(app).get('/')
     .then(res => {
       expect(res.body.message).to.eql('Hello World!');
     });
-  });
+  }
 
-});
+
+}
