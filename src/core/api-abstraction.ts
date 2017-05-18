@@ -1,13 +1,13 @@
 // First we define a standard generic structure for an api response
 import { RequestHandler, Request, Response } from "express";
 
-interface ApiMethodResponse<T> {
+export interface ApiMethodResponse<T> {
   statusCode?: number,
   data: T
 }
 
 // The `apiMethod` constructor will take an `ApiMethodDefinition` as argument.
-type ApiMethodDefinition<T> = (req: Request) => Promise<ApiMethodResponse<T>>
+export type ApiMethodDefinition<T> = (req: Request) => Promise<ApiMethodResponse<T>>
 
 // Now the constructor:
 export function apiMethod<T> (f: ApiMethodDefinition<T>): RequestHandler {
