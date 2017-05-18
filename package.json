@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": " tsc && mocha --reporter spec --compilers ts:ts-node/register 'test/**/*.test.ts' ",
+    "test-doc": " tsc && mocha --reporter spec --compilers ts:ts-node/register 'test/**/*.test.ts' ",
+    "test": "tsc && mocha -r ts-node/register test/**/*.ts",
     "start": "tsc && node dist/index.js"
   },
   "keywords": [],
@@ -21,16 +22,16 @@
     "@types/mocha": "^2.2.41",
     "@types/morgan": "^1.7.32",
     "@types/node": "^7.0.18",
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.1.6",
     "mocha": "^3.4.1",
     "mocha-typescript": "^1.1.2",
-    "chai": "^3.5.0",
-    "chai-http": "^3.0.0",
     "ts-node": "^3.0.4",
+    "tsconfig": "^6.0.0",
     "typescript": "^2.3.2"
   },
-  
   "dependencies": {
     "body-parser": "^1.17.1",
     "debug": "^2.6.7",
