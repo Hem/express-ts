@@ -1,8 +1,10 @@
+import { ApiMethodDefinition } from '../core';
+import { inject, injectable } from "inversify";
 import { IRouteProvider } from '../core/i-route-provider';
-import {Router, Request, Response, NextFunction} from 'express';
+import { Router, Request, Response, NextFunction} from 'express';
 import { apiMethod } from '../core/api-abstraction';
 
-const Heroes = require('../data');
+
 
 
 class Hero {
@@ -10,57 +12,53 @@ class Hero {
 }
 
 
-
-/**
- * get one based on id
- */
-const getOne = apiMethod( async req => {
-    const query = parseInt(req.params.id);
-    const hero = Heroes.find(hero => hero.id === query);
-    return await Promise.resolve({
-      statusCode: (hero ? 200 : 404),
-      data:hero
-    });  
-});
-
-
-
 /**
  * 
  */
-const getAll = apiMethod(async req => {
-    return await Promise.resolve({
-      statusCode: 200,
-      data: Heroes
-    });
-});
-
-
-
-/**
- * 
- */
-const wrappedHeroObject = apiMethod(async req => {
-    return await Promise.resolve({ 
-      statusCode:200,
-      data: new Hero(1, 'Hero')
-    });
-});
-
-
-/**
- * 
- */
+@injectable()
 export class HeroRouteProvider implements IRouteProvider {
+
+    Heroes:any;
+
+    constructor() {
+      this.Heroes = require('../hero-data');
+    }
     
     public getRoutes(): Router {
-      const router:Router = Router();
 
-      router.get('/', getAll);
-      router.get('/test', wrappedHeroObject);
-      router.get('/:id', getOne);
+          const router:Router = Router();
 
-        return router;
+          router.get('/', this.getAll);
+          router.get('/test', this.wrappedObject);
+          router.get('/:id', this.getOne);
+
+          return router;
     }
+
+
+
+    public getOne:any = apiMethod( async req => {
+        const query = parseInt(req.params.id);
+        const hero = this.Heroes.find(hero => hero.id === query);
+        return await Promise.resolve({
+          statusCode: (hero ? 200 : 404),
+          data:hero
+        });  
+    });
+    
+    public getAll:any = apiMethod(async req => {
+        return await Promise.resolve({
+          statusCode: 200,
+          data: this.Heroes
+        });
+    });
+
+    public wrappedObject:any = apiMethod(async req => {
+        return await Promise.resolve({ 
+          statusCode:200,
+          data: new Hero(1, 'Hero')
+        });
+    });
+
 }
 

@@ -1,14 +1,13 @@
-import { GroupRepository } from './group-repository';
-import { UserRepository } from './user-repository';
 import { Container } from "inversify";
-import { IDiSetup } from '../../core';
-import { IUserRepository, IGroupRepository } from "../contracts/index";
+import { IDiSetup } from '../core';
+import { IGroupRepository, IUserRepository } from "./contracts";
+import { GroupRepository, UserRepository } from './repository';
 
 
 
 export class RepositoryDiSetup implements IDiSetup {
     
-    setup(container: Container): void {
+    setup( container: Container): void {
 
         container.bind<IUserRepository>("IUserRepository").to(UserRepository);
         container.bind<IGroupRepository>("IGroupRepository").to(GroupRepository);

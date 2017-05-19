@@ -1,19 +1,30 @@
+import "reflect-metadata";
 import * as path from 'path';
 import * as express from 'express';
 import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
-import {HeroRouteProvider} from './routes/hero-router';
+import { Container } from "inversify";
+
+
+import { IRouteProvider } from './core';
+import { HomeRouterProvider, HeroRouteProvider } from "./routes";
+
 
 // Creates and configures an ExpressJS web server.
 class App {
 
   // ref to Express instance
-  express: express.Application;
+  public express: express.Application;
+
+
+  private container: Container;
 
   //Run configuration methods on the Express instance.
   constructor() {
     this.express = express();
+    this.container = new Container();
     this.middleware();
+    this.dependencyRegistration();
     this.routes();
   }
 
@@ -24,20 +35,22 @@ class App {
     this.express.use(bodyParser.urlencoded({ extended: false }));
   }
 
-  // Configure API endpoints.
-  private routes(): void {
-    /* This is just to get up and running, and to make sure what we've got is
-     * working so far. This function will change when we start to add more
-     * API endpoints */
-    let router = express.Router();
-    // placeholder route handler
-    router.get('/', (req, res, next) => {
-      res.send({ message: 'Hello World!' });
-    });
-    this.express.use('/', router);
-    this.express.use('/api/v1/heroes', new HeroRouteProvider().getRoutes());
+
+  private dependencyRegistration() : void {
+    
+        this.container.bind<IRouteProvider>("HomeRouteProvider").to(HomeRouterProvider);
+        this.container.bind<IRouteProvider>("HeroRouteProvider").to(HeroRouteProvider);
 
   }
+
+  // Configure API endpoints.
+  private routes(): void {
+    
+    this.express.use( '/', this.container.get<IRouteProvider>("HomeRouteProvider").getRoutes() );
+    this.express.use('/api/v1/heroes', this.container.get<IRouteProvider>("HeroRouteProvider").getRoutes() );
+
+  }
+
 }
 
 export default new App().express;
