@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 
 import * as path from 'path';
 import * as express from 'express';
@@ -32,9 +33,15 @@ class App {
 
   // Configure Express middleware.
   private middleware(): void {
+
+    console.info(path.join(__dirname, 'www'));
+
+    
     this.express.use(logger('dev'));
+    this.express.use('/', express.static(path.join(__dirname, 'www')) );
     this.express.use(bodyParser.json());
     this.express.use(bodyParser.urlencoded({ extended: false }));
+
   }
 
 
@@ -51,8 +58,8 @@ class App {
   // Configure API endpoints.
   private routes(): void {
     
-    this.express.use( '/', this.container.get<IRouteProvider>("HomeRouteProvider").getRoutes() );
-    this.express.use('/api/v1/heroes', this.container.get<IRouteProvider>("HeroRouteProvider").getRoutes() );
+    this.express.use( '/api/v1/home', this.container.get<IRouteProvider>("HomeRouteProvider").getRoutes() );
+    this.express.use('/api/v1/groups', this.container.get<IRouteProvider>("GroupRouteProvider").getRoutes() );
     this.express.use('/api/v1/users', this.container.get<IRouteProvider>("UserRouteProvider").getRoutes() );
 
   }

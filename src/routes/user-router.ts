@@ -1,6 +1,6 @@
 import { UserRepository } from '../data/repository';
 import { IUserRepository, User } from '../data/contracts';
-import { apiMethod, IDiSetup, IRouteProvider } from '../core';
+import { apiMethod, IRouteProvider } from '../core';
 import { inject, injectable } from "inversify";
 import { Router } from "express";
 import { Container } from "inversify";
@@ -52,7 +52,7 @@ export class UserRouteProvider implements IRouteProvider {
 
         const repository:IUserRepository = this.container.get<IUserRepository>("IUserRepository");
         
-        const id:number = parseInt( req.param('id') );
+        const id:number = parseInt( req.params.id );
 
         const data:User = await repository.getById(id);
 

@@ -1,6 +1,7 @@
+import { GroupRouteProvider } from './group-router';
 import { Container } from "inversify";
 import { IDiSetup, IRouteProvider } from '../core';
-import { HomeRouterProvider, HeroRouteProvider, UserRouteProvider } from './';
+import { HomeRouterProvider,  UserRouteProvider } from './';
 
 
 export class RouterDiSetup implements IDiSetup {
@@ -8,8 +9,7 @@ export class RouterDiSetup implements IDiSetup {
     public setup(container: Container): void {
         
         container.bind<IRouteProvider>("HomeRouteProvider").to(HomeRouterProvider);
-        container.bind<IRouteProvider>("HeroRouteProvider").to(HeroRouteProvider);
-        container.bind<IRouteProvider>("UserRouteProvider").to(UserRouteProvider)
-
+        container.bind<IRouteProvider>("UserRouteProvider").to(UserRouteProvider);
+        container.bind<IRouteProvider>("GroupRouteProvider").to(GroupRouteProvider);
     }
 }

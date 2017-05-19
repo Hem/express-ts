@@ -1,12 +1,13 @@
-import 'reflect-metadata';
+
 import * as http from 'http';
 import App from './app';
 
-
 console.info('ts-express:server');
+
 
 const port = normalizePort(process.env.PORT || 3000);
 App.set('port', port);
+
 
 /**
  * 
@@ -57,3 +58,4 @@ function onListening(): void {
   let bind = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
   console.info(`Listening on ${bind}`);
 }
+
