@@ -1,20 +1,9 @@
 import { ApiMethodDefinition } from '../core';
-import { inject, injectable } from "inversify";
 import { IRouteProvider } from '../core/i-route-provider';
 import { Router, Request, Response, NextFunction} from 'express';
 import { apiMethod } from '../core/api-abstraction';
+import { inject, injectable } from "inversify";
 
-
-
-
-class Hero {
-  constructor(public id: number, public name: string) {}
-}
-
-
-/**
- * 
- */
 @injectable()
 export class HeroRouteProvider implements IRouteProvider {
 
@@ -62,3 +51,7 @@ export class HeroRouteProvider implements IRouteProvider {
 
 }
 
+
+export class Hero {
+  constructor(public id: number, public name: string) {}
+}

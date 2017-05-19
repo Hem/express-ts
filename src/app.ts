@@ -1,4 +1,4 @@
-import "reflect-metadata";
+
 import * as path from 'path';
 import * as express from 'express';
 import * as logger from 'morgan';
@@ -6,8 +6,10 @@ import * as bodyParser from 'body-parser';
 import { Container } from "inversify";
 
 
-import { IRouteProvider } from './core';
-import { HomeRouterProvider, HeroRouteProvider } from "./routes";
+import { DEFAULT_DB_CONFIG } from "./config";
+import { RouterDiSetup } from './routes/router-di-setup';
+import { DbConfig, IRouteProvider } from './core';
+import { RepositoryDiSetup } from './data/repository-di-setup';
 
 
 // Creates and configures an ExpressJS web server.
@@ -37,10 +39,13 @@ class App {
 
 
   private dependencyRegistration() : void {
-    
-        this.container.bind<IRouteProvider>("HomeRouteProvider").to(HomeRouterProvider);
-        this.container.bind<IRouteProvider>("HeroRouteProvider").to(HeroRouteProvider);
-
+        //
+        this.container.bind<DbConfig>( "DefaultDbConfig" ).toConstantValue( new DbConfig( DEFAULT_DB_CONFIG ) );
+        this.container.bind<Container>(Container).toConstantValue(this.container);
+        
+        new RepositoryDiSetup().setup(this.container);
+        
+        new RouterDiSetup().setup(this.container);
   }
 
   // Configure API endpoints.
@@ -48,6 +53,7 @@ class App {
     
     this.express.use( '/', this.container.get<IRouteProvider>("HomeRouteProvider").getRoutes() );
     this.express.use('/api/v1/heroes', this.container.get<IRouteProvider>("HeroRouteProvider").getRoutes() );
+    this.express.use('/api/v1/users', this.container.get<IRouteProvider>("UserRouteProvider").getRoutes() );
 
   }
 
