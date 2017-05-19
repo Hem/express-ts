@@ -1,43 +1,69 @@
+import 'reflect-metadata';
+
 import * as path from 'path';
 import * as express from 'express';
 import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
-import {HeroRouteProvider} from './routes/hero-router';
+import { Container } from "inversify";
+
+
+import { DEFAULT_DB_CONFIG } from "./config";
+import { RouterDiSetup } from './routes/router-di-setup';
+import { DbConfig, IRouteProvider } from './core';
+import { RepositoryDiSetup } from './data/repository-di-setup';
+
 
 // Creates and configures an ExpressJS web server.
 class App {
 
   // ref to Express instance
-  express: express.Application;
+  public express: express.Application;
+
+
+  private container: Container;
 
   //Run configuration methods on the Express instance.
   constructor() {
     this.express = express();
+    this.container = new Container();
     this.middleware();
+    this.dependencyRegistration();
     this.routes();
   }
 
   // Configure Express middleware.
   private middleware(): void {
+
+    console.info(path.join(__dirname, 'www'));
+
+    
     this.express.use(logger('dev'));
+    this.express.use('/', express.static(path.join(__dirname, 'www')) );
     this.express.use(bodyParser.json());
     this.express.use(bodyParser.urlencoded({ extended: false }));
+
+  }
+
+
+  private dependencyRegistration() : void {
+        //
+        this.container.bind<DbConfig>( "DefaultDbConfig" ).toConstantValue( new DbConfig( DEFAULT_DB_CONFIG ) );
+        this.container.bind<Container>(Container).toConstantValue(this.container);
+        
+        new RepositoryDiSetup().setup(this.container);
+        
+        new RouterDiSetup().setup(this.container);
   }
 
   // Configure API endpoints.
   private routes(): void {
-    /* This is just to get up and running, and to make sure what we've got is
-     * working so far. This function will change when we start to add more
-     * API endpoints */
-    let router = express.Router();
-    // placeholder route handler
-    router.get('/', (req, res, next) => {
-      res.send({ message: 'Hello World!' });
-    });
-    this.express.use('/', router);
-    this.express.use('/api/v1/heroes', new HeroRouteProvider().getRoutes());
+    
+    this.express.use( '/api/v1/home', this.container.get<IRouteProvider>("HomeRouteProvider").getRoutes() );
+    this.express.use('/api/v1/groups', this.container.get<IRouteProvider>("GroupRouteProvider").getRoutes() );
+    this.express.use('/api/v1/users', this.container.get<IRouteProvider>("UserRouteProvider").getRoutes() );
 
   }
+
 }
 
 export default new App().express;

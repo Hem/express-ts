@@ -1,6 +1,5 @@
-import { User } from '../models';
 import { AbstractRepository } from './abstract-repository';
-import { IUserRepository } from '../contracts';
+import { IUserRepository, User } from '../contracts';
 import { injectable } from "inversify";
 
 
@@ -18,8 +17,8 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
                                 .first();
     }
 
-    async find(filter: string, pageNumber: number, count: number): Promise<User[]> {
-        throw new Error("Method not implemented.");
+    async find(filter: string, pageNumber: number = 1, count: number = 20): Promise<User[]> {
+        return await this.getTable().select();
     }
 
     async create(dto: User): Promise<User> {

@@ -1,5 +1,4 @@
-import { Group } from '../models';
-import { IGroupRepository } from '../contracts';
+import { IGroupRepository, Group } from '../contracts';
 import { AbstractRepository } from './abstract-repository';
 
 export class GroupRepository extends AbstractRepository implements IGroupRepository {
@@ -12,8 +11,8 @@ export class GroupRepository extends AbstractRepository implements IGroupReposit
                         .first();
     }
 
-    find(filter: string, pageNumber: number, count: number): Promise<Group[]> {
-        throw new Error("Method not implemented.");
+    async find(filter: string, pageNumber: number, count: number): Promise<Group[]> {
+        return await this.getTable().select();
     }
 
     create(dto: Group): Promise<Group> {
